@@ -18,7 +18,7 @@
             <li><a href="#artists">Artists</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><a href="#" class="btn-nav">Shop Now</a></li>
+            <li><a href="#" class="btn-nav" id="shopNowButton">Shop Now</a></li>
         </ul>
         <div class="hamburger">
             <div class="line"></div>
@@ -40,54 +40,125 @@
     </section>
     
     <!-- Featured Gallery -->
-    <section class="gallery-section" id="gallery">
-        <div class="section-header">
-            <h2>Featured Artworks</h2>
-            <p>Handpicked selections from our collection</p>
-        </div>
-        <div class="gallery-grid">
-            <div class="art-item">
-                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Abstract painting">
-                <div class="art-info">
-                    <h3>Colorful Abstraction</h3>
-                    <p>Acrylic on canvas • 24" × 36"</p>
-                    <span class="price">$450</span>
-                    <button class="btn-art">View Details</button>
-                </div>
-            </div>
-            <div class="art-item">
-                <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Flower photography">
-                <div class="art-info">
-                    <h3>Floral Essence</h3>
-                    <p>Fine art photography • Limited edition</p>
-                    <span class="price">$250</span>
-                    <button class="btn-art">View Details</button>
-                </div>
-            </div>
-            <div class="art-item">
-                <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Cityscape painting">
-                <div class="art-info">
-                    <h3>Urban Dreams</h3>
-                    <p>Oil on canvas • 30" × 40"</p>
-                    <span class="price">$600</span>
-                    <button class="btn-art">View Details</button>
-                </div>
-            </div>
-            <div class="art-item">
-                <img src="https://images.unsplash.com/photo-1508615070457-7baeba4003ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Portrait painting">
-                <div class="art-info">
-                    <h3>Silent Portrait</h3>
-                    <p>Watercolor on paper • 18" × 24"</p>
-                    <span class="price">$350</span>
-                    <button class="btn-art">View Details</button>
-                </div>
+<section class="gallery-section" id="gallery">
+    <div class="section-header">
+        <h2>Featured Artworks</h2>
+        <p>Handpicked selections from our collection</p>
+    </div>
+    <div class="gallery-grid">
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Abstract painting">
+            <div class="art-info">
+                <h3>Colorful Abstraction</h3>
+                <p>Acrylic on canvas • 24" × 36"</p>
+                <span class="price">$450</span>
+                <button class="btn-art">View Details</button>
             </div>
         </div>
-        <div class="section-footer">
-            <a href="#" class="btn">View Full Gallery</a>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Flower photography">
+            <div class="art-info">
+                <h3>Floral Essence</h3>
+                <p>Fine art photography • Limited edition</p>
+                <span class="price">$250</span>
+                <button class="btn-art">View Details</button>
+            </div>
         </div>
-    </section>
-    
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Cityscape painting">
+            <div class="art-info">
+                <h3>Urban Dreams</h3>
+                <p>Oil on canvas • 30" × 40"</p>
+                <span class="price">$600</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1508615070457-7baeba4003ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Portrait painting">
+            <div class="art-info">
+                <h3>Silent Portrait</h3>
+                <p>Watercolor on paper • 18" × 24"</p>
+                <span class="price">$350</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1464278533981-50106e6176b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Mountain painting">
+            <div class="art-info">
+                <h3>Mountain Serenity</h3>
+                <p>Oil on canvas • 20" × 30"</p>
+                <span class="price">$500</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Ocean painting">
+            <div class="art-info">
+                <h3>Ocean Waves</h3>
+                <p>Acrylic on canvas • 24" × 36"</p>
+                <span class="price">$480</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Sunset painting">
+            <div class="art-info">
+                <h3>Sunset Reflections</h3>
+                <p>Oil on canvas • 24" × 36"</p>
+                <span class="price">$520</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1574182245530-967d9b3831af?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Abstract art">
+            <div class="art-info">
+                <h3>Abstract Harmony</h3>
+                <p>Mixed media • 30" × 30"</p>
+                <span class="price">$430</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1502675135487-e971002a6adb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Forest painting">
+            <div class="art-info">
+                <h3>Forest Whispers</h3>
+                <p>Watercolor • 18" × 24"</p>
+                <span class="price">$380</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Urban photography">
+            <div class="art-info">
+                <h3>Urban Geometry</h3>
+                <p>Photography • Limited edition</p>
+                <span class="price">$290</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Blue painting">
+            <div class="art-info">
+                <h3>Emotion in Blue</h3>
+                <p>Acrylic on canvas • 36" × 48"</p>
+                <span class="price">$750</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+        <div class="art-item">
+            <img src="https://images.unsplash.com/photo-1515511856280-7b23f68d2996?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Desert painting">
+            <div class="art-info">
+                <h3>Desert Bloom</h3>
+                <p>Pastel on paper • 16" × 20"</p>
+                <span class="price">$320</span>
+                <button class="btn-art">View Details</button>
+            </div>
+        </div>
+    </div>
+    <div class="section-footer">
+        <a href="#" class="btn">View Full Gallery</a>
+    </div>
+</section>
     <!-- Artists Section -->
     <section class="artists-section" id="artists">
         <div class="section-header">
@@ -236,5 +307,26 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <!-- Shopping Modal -->
+<div class="shop-modal" id="shopModal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Our Art Collection</h2>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here by JavaScript -->
+        </div>
+        <div class="cart-section">
+            <h3>Your Cart (<span id="cartCount">0</span>)</h3>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will appear here -->
+            </div>
+            <div class="cart-total">
+                Total: $<span id="cartTotal">0.00</span>
+            </div>
+            <button class="btn" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

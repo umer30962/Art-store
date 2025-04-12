@@ -68,3 +68,271 @@ document.querySelectorAll('.art-item, .artist-card, .about-content, .contact-con
 
 window.addEventListener('scroll', animateOnScroll);
 window.addEventListener('load', animateOnScroll);
+
+// Shop Now Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const shopNowBtn = document.getElementById('shopNowButton');
+    const shopModal = document.getElementById('shopModal');
+    const closeModal = document.querySelector('.close-modal');
+    const productsGrid = document.getElementById('productsGrid');
+    const cartItems = document.getElementById('cartItems');
+    const cartCount = document.getElementById('cartCount');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    // Updated product data with your new products
+    const products = [
+        {
+            id: 1,
+            name: 'Colorful Abstraction',
+            description: 'Acrylic on canvas • 24" × 36"',
+            price: 450,
+            image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 2,
+            name: 'Floral Essence',
+            description: 'Fine art photography • Limited edition',
+            price: 250,
+            image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 3,
+            name: 'Urban Dreams',
+            description: 'Oil on canvas • 30" × 40"',
+            price: 600,
+            image: 'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 4,
+            name: 'Silent Portrait',
+            description: 'Watercolor on paper • 18" × 24"',
+            price: 350,
+            image: 'https://images.unsplash.com/photo-1508615070457-7baeba4003ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 5,
+            name: 'Mountain Serenity',
+            description: 'Oil on canvas • 20" × 30"',
+            price: 500,
+            image: 'https://images.unsplash.com/photo-1464278533981-50106e6176b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 6,
+            name: 'Ocean Waves',
+            description: 'Acrylic on canvas • 24" × 36"',
+            price: 480,
+            image: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        // Add these new products
+        {
+            id: 7,
+            name: 'Sunset Reflections',
+            description: 'Oil on canvas • 24" × 36"',
+            price: 520,
+            image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 8,
+            name: 'Abstract Harmony',
+            description: 'Mixed media • 30" × 30"',
+            price: 430,
+            image: 'https://images.unsplash.com/photo-1574182245530-967d9b3831af?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 9,
+            name: 'Forest Whispers',
+            description: 'Watercolor • 18" × 24"',
+            price: 380,
+            image: 'https://images.unsplash.com/photo-1502675135487-e971002a6adb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 10,
+            name: 'Urban Geometry',
+            description: 'Photography • Limited edition',
+            price: 290,
+            image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 11,
+            name: 'Emotion in Blue',
+            description: 'Acrylic on canvas • 36" × 48"',
+            price: 750,
+            image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        },
+        {
+            id: 12,
+            name: 'Desert Bloom',
+            description: 'Pastel on paper • 16" × 20"',
+            price: 320,
+            image: 'https://images.unsplash.com/photo-1515511856280-7b23f68d2996?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        }
+    ];
+
+    let cart = [];
+
+    if (shopNowBtn) {
+        shopNowBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            shopModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            renderProducts();
+            renderCart();
+            console.log("Shop modal opened");
+        });
+        console.log("Shop Now button found and listener attached");
+    } else {
+        console.log("Shop Now button not found");
+    }
+
+    // Close modal
+    if (closeModal) {
+        closeModal.addEventListener('click', () => {
+            shopModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === shopModal) {
+            shopModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Render products
+    function renderProducts() {
+        productsGrid.innerHTML = '';
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <span class="product-price">$${product.price.toFixed(2)}</span>
+                    <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                </div>
+            `;
+            productsGrid.appendChild(productCard);
+        });
+
+        // Add event listeners to all Add to Cart buttons
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', addToCart);
+        });
+    }
+
+    // Add to cart function
+    function addToCart(e) {
+        const productId = parseInt(e.target.getAttribute('data-id'));
+        const product = products.find(p => p.id === productId);
+        
+        // Check if product is already in cart
+        const existingItem = cart.find(item => item.id === productId);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                ...product,
+                quantity: 1
+            });
+        }
+        
+        renderCart();
+    }
+
+    // Render cart
+    function renderCart() {
+        cartItems.innerHTML = '';
+        
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p>Your cart is empty</p>';
+        } else {
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <p>${item.description}</p>
+                    </div>
+                    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="cart-item-quantity">
+                        <button class="decrease-quantity" data-id="${item.id}">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="increase-quantity" data-id="${item.id}">+</button>
+                    </div>
+                    <button class="remove-item" data-id="${item.id}">&times;</button>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+        }
+        
+        // Update cart count
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        
+        // Update total
+        const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        cartTotal.textContent = totalPrice.toFixed(2);
+        
+        // Add event listeners to quantity buttons
+        document.querySelectorAll('.decrease-quantity').forEach(button => {
+            button.addEventListener('click', decreaseQuantity);
+        });
+        
+        document.querySelectorAll('.increase-quantity').forEach(button => {
+            button.addEventListener('click', increaseQuantity);
+        });
+        
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', removeItem);
+        });
+    }
+
+    // Quantity adjustment functions
+    function decreaseQuantity(e) {
+        const productId = parseInt(e.target.getAttribute('data-id'));
+        const item = cart.find(item => item.id === productId);
+        
+        if (item.quantity > 1) {
+            item.quantity -= 1;
+        } else {
+            cart = cart.filter(item => item.id !== productId);
+        }
+        
+        renderCart();
+    }
+
+    function increaseQuantity(e) {
+        const productId = parseInt(e.target.getAttribute('data-id'));
+        const item = cart.find(item => item.id === productId);
+        item.quantity += 1;
+        renderCart();
+    }
+
+    function removeItem(e) {
+        const productId = parseInt(e.target.getAttribute('data-id'));
+        cart = cart.filter(item => item.id !== productId);
+        renderCart();
+    }
+
+    // Checkout button
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+            } else {
+                alert(`Thank you for your purchase! Total: $${cartTotal.textContent}`);
+                cart = [];
+                renderCart();
+                shopModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
+});
