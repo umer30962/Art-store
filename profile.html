@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Timeless Art</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">TIMELESS ART</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#gallery">Gallery</a></li>
+            <li><a href="index.html#artists">Artists</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li class="user-dropdown">
+                <a href="#" class="user-link">
+                    <i class="fas fa-user-circle"></i> User
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="#" id="logoutLink">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </nav>
+
+    <section class="profile-section">
+        <div class="profile-container">
+            <h2>My Profile</h2>
+            <div class="profile-info" id="profileInfo">
+                <!-- Profile info will be loaded here -->
+            </div>
+            <div class="profile-orders">
+                <h3>My Orders</h3>
+                <div class="orders-list" id="ordersList">
+                    <!-- Orders will be loaded here -->
+                    <p>You haven't placed any orders yet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const profileInfo = document.getElementById('profileInfo');
+            
+            if (currentUser) {
+                profileInfo.innerHTML = `
+                    <div class="profile-field">
+                        <span class="field-label">Name:</span>
+                        <span class="field-value">${currentUser.name}</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="field-label">Email:</span>
+                        <span class="field-value">${currentUser.email}</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="field-label">Member Since:</span>
+                        <span class="field-value">${new Date().toLocaleDateString()}</span>
+                    </div>
+                `;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

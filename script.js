@@ -322,22 +322,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Checkout button
-    if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) {
-                alert('Your cart is empty!');
-            } else {
-                alert(`Thank you for your purchase! Total: $${cartTotal.textContent}`);
-                cart = [];
-                renderCart();
-                shopModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
+    // Checkout button
+if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+        } else {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                if (confirm('You need to login to proceed. Would you like to login now?')) {
+                    window.location.href = 'login.html';
+                }
+                return;
             }
-        });
-    }
-});
-
-
+            
+            alert(`Thank you for your purchase, ${currentUser.name}! Total: $${cartTotal.textContent}`);
+            cart = [];
+            renderCart();
+            shopModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
 // Add this code to your script.js file
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -483,3 +489,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Update navigation based on authentication status
+function updateNavForAuth() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (!navLinks) return;
+    
+    // Remove any existing auth links
+    const existingAuthLinks = navLinks.querySelectorAll('a[href="login.html"], a[href="register.html"]');
+    existingAuthLinks.forEach(link => link.parentElement.remove());
+    
+    // Remove any existing user dropdown
+    const existingDropdown = navLinks.querySelector('.user-dropdown');
+    if (existingDropdown) existingDropdown.remove();
+    
+    if (currentUser) {
+        // Add user dropdown
+        const userLi = document.createElement('li');
+        userLi.className = 'user-dropdown';
+        userLi.innerHTML = `
+            <a href="#" class="user-link">
+                <i class="fas fa-user-circle"></i> ${currentUser.name.split(' ')[0]}
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+        `;
+        navLinks.appendChild(userLi);
+        
+        // Add logout functionality
+        const logoutLink = document.getElementById('logoutLink');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            });
+        }
+    } else {
+        // Add login/register links
+        const loginLi = document.createElement('li');
+        loginLi.innerHTML = '<a href="login.html" class="btn-nav">Login</a>';
+        navLinks.appendChild(loginLi);
+        
+        const registerLi = document.createElement('li');
+        registerLi.innerHTML = '<a href="register.html" class="btn-nav">Register</a>';
+        navLinks.appendChild(registerLi);
+    }
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', updateNavForAuth)});
