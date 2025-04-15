@@ -227,7 +227,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add event listeners to all View Details buttons
         document.querySelectorAll('.view-details').forEach(button => {
-            button.addEventListener('click', showProductDetails);
+            button.addEventListener('click', (e) => {
+                console.log('View Details button clicked:', e.target);
+                showProductDetails(e);
+            });
         });
     }
 
@@ -328,170 +331,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Checkout button
-    // Checkout button
-if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-        if (cart.length === 0) {
-            alert('Your cart is empty!');
-        } else {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (!currentUser) {
-                if (confirm('You need to login to proceed. Would you like to login now?')) {
-                    window.location.href = 'login.html';
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+            } else {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) {
+                    if (confirm('You need to login to proceed. Would you like to login now?')) {
+                        window.location.href = 'login.html';
+                    }
+                    return;
                 }
-                return;
-            }
-            
-            alert(`Thank you for your purchase, ${currentUser.name}! Total: $${cartTotal.textContent}`);
-            cart = [];
-            renderCart();
-            shopModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-}
-// Add this code to your script.js file
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Your existing code remains here
-    
-    // Product detail modal functionality
-    const productDetailsModal = document.createElement('div');
-    productDetailsModal.id = 'productDetailsModal';
-    productDetailsModal.className = 'product-details-modal';
-    document.body.appendChild(productDetailsModal);
-    
-    // Add event listeners to all View Details buttons
-    document.querySelectorAll('.btn-art').forEach(button => {
-        button.addEventListener('click', showProductDetails);
-    });
-    
-    // Function to show product details
-    function showProductDetails(e) {
-        // Get the parent art item
-        const artItem = e.target.closest('.art-item');
-        
-        // Extract product information
-        const productImage = artItem.querySelector('img').src;
-        const productName = artItem.querySelector('h3').textContent;
-        const productDescription = artItem.querySelector('p').textContent;
-        const productPrice = artItem.querySelector('.price').textContent;
-        
-        // Generate random additional details (you can replace this with real data)
-        const artistName = ["Sarah Johnson", "Michael Chen", "Emma Rodriguez"][Math.floor(Math.random() * 3)];
-        const yearCreated = 2020 + Math.floor(Math.random() * 5);
-        const artDescription = [
-            "This stunning piece captures the essence of abstract expression through vibrant colors and bold strokes.",
-            "A remarkable work that combines traditional techniques with contemporary vision.",
-            "An exploration of light and shadow that invites viewers to immerse themselves in its depth."
-        ][Math.floor(Math.random() * 3)];
-        
-        // Create the modal content
-        productDetailsModal.innerHTML = `
-            <div class="product-details-content">
-                <span class="close-product-details">&times;</span>
-                <div class="product-details-grid">
-                    <div class="product-details-image">
-                        <img src="${productImage}" alt="${productName}">
-                    </div>
-                    <div class="product-details-info">
-                        <h2>${productName}</h2>
-                        <p class="artist-name">By ${artistName}</p>
-                        <p class="product-specs">${productDescription}</p>
-                        <p class="product-year">Year: ${yearCreated}</p>
-                        <div class="product-price-large">${productPrice}</div>
-                        <p class="product-description">${artDescription}</p>
-                        <div class="product-actions">
-                            <button class="btn add-to-cart-detail" data-name="${productName}">Add to Cart</button>
-                            <button class="btn btn-outline inquire-button">Inquire About This Piece</button>
-                        </div>
-                        <div class="product-details-extras">
-                            <div class="detail-item">
-                                <h4>Shipping</h4>
-                                <p>Free worldwide shipping on all artwork</p>
-                            </div>
-                            <div class="detail-item">
-                                <h4>Returns</h4>
-                                <p>30-day satisfaction guarantee</p>
-                            </div>
-                            <div class="detail-item">
-                                <h4>Authentication</h4>
-                                <p>Certificate of authenticity included</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        // Show the modal
-        productDetailsModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        
-        // Close button functionality
-        const closeButton = document.querySelector('.close-product-details');
-        closeButton.addEventListener('click', () => {
-            productDetailsModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Click outside to close
-        productDetailsModal.addEventListener('click', (e) => {
-            if (e.target === productDetailsModal) {
-                productDetailsModal.style.display = 'none';
+                
+                alert(`Thank you for your purchase, ${currentUser.name}! Total: $${cartTotal.textContent}`);
+                cart = [];
+                renderCart();
+                shopModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
             }
-        });
-        
-        // Add to Cart functionality from the details modal
-        const addToCartButton = document.querySelector('.add-to-cart-detail');
-        addToCartButton.addEventListener('click', () => {
-            // Find the product in your products array
-            const productName = addToCartButton.getAttribute('data-name');
-            const product = products.find(p => p.name === productName);
-            
-            if (product) {
-                // Check if product is already in cart
-                const existingItem = cart.find(item => item.id === product.id);
-                
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({
-                        ...product,
-                        quantity: 1
-                    });
-                }
-                
-                renderCart();
-                
-                // Provide feedback
-                alert(`${productName} has been added to your cart.`);
-            }
-        });
-        
-        // Inquire button functionality
-        const inquireButton = document.querySelector('.inquire-button');
-        inquireButton.addEventListener('click', () => {
-            // Scroll to contact form and close the modal
-            productDetailsModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            
-            const contactSection = document.getElementById('contact');
-            const contactTextarea = document.querySelector('.contact-form textarea');
-            
-            window.scrollTo({
-                top: contactSection.offsetTop - 80,
-                behavior: 'smooth'
-            });
-            
-            // Prefill the contact form
-            contactTextarea.value = `I'm interested in the artwork: ${productName}. Please provide more information.`;
-            
-            // Focus the textarea
-            setTimeout(() => {
-                contactTextarea.focus();
-            }, 1000);
         });
     }
 });
@@ -547,5 +405,130 @@ function updateNavForAuth() {
     }
 }
 
-// Call this function when the page loads
-document.addEventListener('DOMContentLoaded', updateNavForAuth)});
+// Call updateNavForAuth when the page loads
+document.addEventListener('DOMContentLoaded', updateNavForAuth);
+
+// Define showProductDetails globally (single definition)
+function showProductDetails(e) {
+    console.log('View Details clicked:', e.target);
+    const productCard = e.target.closest('.art-item') || e.target.closest('.product-card');
+
+    if (!productCard) {
+        console.error('Product card not found');
+        return;
+    }
+
+    const productImage = productCard.querySelector('img').src;
+    const productName = productCard.querySelector('h3').textContent;
+    const productDescription = productCard.querySelector('p').textContent;
+    const productPrice = productCard.querySelector('.price, .product-price').textContent;
+
+    const productDetailsModal = document.createElement('div');
+    productDetailsModal.className = 'product-details-modal';
+    productDetailsModal.innerHTML = `
+        <div class="product-details-content">
+            <span class="close-product-details">&times;</span>
+            <div class="product-details-grid">
+                <div class="product-details-image">
+                    <img src="${productImage}" alt="${productName}">
+                </div>
+                <div class="product-details-info">
+                    <h2>${productName}</h2>
+                    <p class="artist-name">By Sarah Johnson</p>
+                    <p class="product-specs">${productDescription}</p>
+                    <p class="product-year">Year: 2025</p>
+                    <p class="product-price-large">${productPrice}</p>
+                    <p class="product-description">This stunning piece captures the essence of artistic expression through carefully crafted technique and attention to detail. Each element has been thoughtfully composed to create a harmonious and engaging visual experience.</p>
+                    <div class="product-actions">
+                        <button class="btn add-to-cart-detail" data-id="${productCard.querySelector('.add-to-cart, .btn-art')?.getAttribute('data-id')}">Add to Cart</button>
+                        <button class="btn btn-outline inquire-button">Inquire About This Piece</button>
+                    </div>
+                    <div class="product-details-extras">
+                        <div class="detail-item">
+                            <h4>Shipping</h4>
+                            <p>Free worldwide shipping on all artwork</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4>Returns</h4>
+                            <p>30-day satisfaction guarantee</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4>Authentication</h4>
+                            <p>Certificate of authenticity included</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(productDetailsModal);
+    productDetailsModal.style.display = 'block';
+
+    // Close button functionality
+    const closeButton = productDetailsModal.querySelector('.close-product-details');
+    closeButton.addEventListener('click', () => {
+        productDetailsModal.remove();
+    });
+
+    // Click outside to close
+    productDetailsModal.addEventListener('click', (e) => {
+        if (e.target === productDetailsModal) {
+            productDetailsModal.remove();
+        }
+    });
+
+    // Add to Cart functionality
+    const addToCartButton = productDetailsModal.querySelector('.add-to-cart-detail');
+    if (addToCartButton) {
+        addToCartButton.addEventListener('click', () => {
+            const addToCartEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            const originalAddToCartButton = productCard.querySelector('.add-to-cart');
+            if (originalAddToCartButton) {
+                originalAddToCartButton.dispatchEvent(addToCartEvent);
+            }
+            productDetailsModal.remove();
+        });
+    }
+
+    // Inquire button functionality
+    const inquireButton = productDetailsModal.querySelector('.inquire-button');
+    if (inquireButton) {
+        inquireButton.addEventListener('click', () => {
+            productDetailsModal.remove();
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                const contactTextarea = contactSection.querySelector('textarea');
+                if (contactTextarea) {
+                    contactTextarea.value = `I'm interested in the artwork: ${productName}. Please provide more information.`;
+                }
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+}
+
+// Initialize view details functionality
+document.addEventListener('DOMContentLoaded', function() {
+    function attachViewDetailsListeners() {
+        document.querySelectorAll('.btn-art').forEach(button => {
+            button.addEventListener('click', showProductDetails);
+        });
+    }
+
+    // Initial attachment of listeners
+    attachViewDetailsListeners();
+
+    // Attach listeners after rendering products
+    if (typeof window.renderProducts === 'function') {
+        const originalRenderProducts = window.renderProducts;
+        window.renderProducts = function() {
+            originalRenderProducts.apply(this, arguments);
+            attachViewDetailsListeners();
+        };
+    }
+});
