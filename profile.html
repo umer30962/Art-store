@@ -8,30 +8,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <nav>
-        <div class="logo">TIMELESS ART</div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="index.html#gallery">Gallery</a></li>
-            <li><a href="index.html#artists">Artists</a></li>
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
-            <li class="user-dropdown">
-                <a href="#" class="user-link">
-                    <i class="fas fa-user-circle"></i> User
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="#" id="logoutLink">Logout</a></li>
+    <header class="main-header">
+        
+        <nav class="main-nav">
+            <div class="nav-wrapper">
+                <div class="logo-container">
+                    <div class="logo">
+                        <span class="logo-text">TIMELESS</span>
+                        <span class="logo-separator"></span>
+                        <span class="logo-subtext">ART</span>
+                    </div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#gallery">Gallery</a></li>
+                    <li><a href="index.html#artists">Artists</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="#" class="btn-nav btn-shop" id="shopNowButton">Shop Now</a></li>
                 </ul>
-            </li>
-        </ul>
-        <div class="hamburger">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
+                <div class="nav-actions">
+                    <button class="search-toggle"><i class="fas fa-search"></i></button>
+                    <button class="cart-toggle"><i class="fas fa-shopping-bag"></i></button>
+                </div>
+                <div class="hamburger">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+        </nav>
+        <div class="search-overlay">
+            <div class="search-container">
+                <input type="text" placeholder="Search for art...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
         </div>
-    </nav>
+    </header>
 
     <section class="profile-section">
         <div class="profile-container">

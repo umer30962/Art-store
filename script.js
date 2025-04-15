@@ -354,60 +354,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Update navigation based on authentication status
-function updateNavForAuth() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (!navLinks) return;
-    
-    // Remove any existing auth links
-    const existingAuthLinks = navLinks.querySelectorAll('a[href="login.html"], a[href="register.html"]');
-    existingAuthLinks.forEach(link => link.parentElement.remove());
-    
-    // Remove any existing user dropdown
-    const existingDropdown = navLinks.querySelector('.user-dropdown');
-    if (existingDropdown) existingDropdown.remove();
-    
-    if (currentUser) {
-        // Add user dropdown
-        const userLi = document.createElement('li');
-        userLi.className = 'user-dropdown';
-        userLi.innerHTML = `
-            <a href="#" class="user-link">
-                <i class="fas fa-user-circle"></i> ${currentUser.name.split(' ')[0]}
-            </a>
-            <ul class="dropdown-menu">
-                <li><a href="profile.html">Profile</a></li>
-                <li><a href="#" id="logoutLink">Logout</a></li>
-            </ul>
-        `;
-        navLinks.appendChild(userLi);
-        
-        // Add logout functionality
-        const logoutLink = document.getElementById('logoutLink');
-        if (logoutLink) {
-            logoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
-            });
-        }
-    } else {
-        // Add login/register links
-        const loginLi = document.createElement('li');
-        loginLi.innerHTML = '<a href="login.html" class="btn-nav">Login</a>';
-        navLinks.appendChild(loginLi);
-        
-        const registerLi = document.createElement('li');
-        registerLi.innerHTML = '<a href="register.html" class="btn-nav">Register</a>';
-        navLinks.appendChild(registerLi);
-    }
-}
-
-// Call updateNavForAuth when the page loads
-document.addEventListener('DOMContentLoaded', updateNavForAuth);
-
 // Define showProductDetails globally (single definition)
 function showProductDetails(e) {
     console.log('View Details clicked:', e.target);
@@ -532,3 +478,60 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 });
+
+// Search functionality
+const searchToggle = document.querySelector('.search-toggle');
+const searchOverlay = document.querySelector('.search-overlay');
+const searchInput = document.querySelector('.search-container input');
+const searchButton = document.querySelector('.search-container button');
+
+if (searchToggle) {
+    searchToggle.addEventListener('click', () => {
+        searchOverlay.classList.add('active');
+        searchInput.focus();
+    });
+}
+
+// Close search overlay when clicking outside
+document.addEventListener('click', (e) => {
+    if (e.target === searchOverlay) {
+        searchOverlay.classList.remove('active');
+    }
+});
+
+// Search functionality
+if (searchButton) {
+    searchButton.addEventListener('click', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const artItems = document.querySelectorAll('.art-item');
+        
+        artItems.forEach(item => {
+            const title = item.querySelector('h3').textContent.toLowerCase();
+            const description = item.querySelector('p').textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                item.style.display = 'block';
+                item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        searchOverlay.classList.remove('active');
+    });
+}
+
+// Cart functionality
+const cartToggle = document.querySelector('.cart-toggle');
+if (cartToggle) {
+    cartToggle.addEventListener('click', () => {
+        const shopModal = document.getElementById('shopModal');
+        if (shopModal) {
+            shopModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            // If renderProducts and renderCart functions exist, call them
+            if (typeof renderProducts === 'function') renderProducts();
+            if (typeof renderCart === 'function') renderCart();
+        }
+    });
+}
