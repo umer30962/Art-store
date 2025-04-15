@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>${product.description}</p>
                     <span class="product-price">$${product.price.toFixed(2)}</span>
                     <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    <button class="btn-art view-details" data-id="${product.id}">View Details</button>
                 </div>
             `;
             productsGrid.appendChild(productCard);
@@ -222,6 +223,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listeners to all Add to Cart buttons
         document.querySelectorAll('.add-to-cart').forEach(button => {
             button.addEventListener('click', addToCart);
+        });
+
+        // Add event listeners to all View Details buttons
+        document.querySelectorAll('.view-details').forEach(button => {
+            button.addEventListener('click', showProductDetails);
         });
     }
 
