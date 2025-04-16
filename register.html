@@ -15,19 +15,25 @@
                 <span><i class="fas fa-envelope"></i> info@timelessart.com</span>
             </div>
             <div class="header-auth">
-                <a href="login.html">Login</a>
-                <span class="divider">|</span>
-                <a href="register.html">Register</a>
+                <div class="auth-dropdown">
+                    <button class="auth-dropdown-toggle">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="auth-dropdown-menu">
+                        <a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a>
+                        <a href="register.html"><i class="fas fa-user-plus"></i>Register</a>
+                    </div>
+                </div>
             </div>
         </div>
         <nav class="main-nav">
             <div class="nav-wrapper">
                 <div class="logo-container">
-                    <div class="logo">
+                    <a href="index.html" class="logo">
                         <span class="logo-text">TIMELESS</span>
                         <span class="logo-separator"></span>
                         <span class="logo-subtext">ART</span>
-                    </div>
+                    </a>
                 </div>
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
@@ -35,9 +41,9 @@
                     <li><a href="index.html#artists">Artists</a></li>
                     <li><a href="index.html#about">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="login.html" class="btn-nav login">Login</a></li>
+                    <li><a href="register.html" class="btn-nav register">Register</a></li>
                     <li><a href="#" class="btn-nav btn-shop" id="shopNowButton">Shop Now</a></li>
-                    <li><a href="login.html" class="btn-nav">Login</a></li>
-                    <li><a href="register.html" class="btn-nav">Register</a></li>
                 </ul>
                 <div class="nav-actions">
                     <button class="search-toggle"><i class="fas fa-search"></i></button>

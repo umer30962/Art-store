@@ -3,95 +3,191 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     updateAuthDisplay(currentUser);
     initializeAuthListeners();
+    updateCartBadge();
+    initializeDropdownToggle();
 });
 
-function updateAuthDisplay(currentUser) {
-    const headerAuth = document.querySelector('.header-auth');
-    const navLinks = document.querySelector('.nav-links');
-    const contactLink = navLinks.querySelector('a[href*="contact"]');
-
-    if (currentUser) {
-        // Update header auth section
-        headerAuth.innerHTML = `
-            <a href="profile.html">${currentUser.name}</a>
-            <span class="divider">|</span>
-            <a href="#" id="logoutButton">Logout</a>
-        `;
-
-        // Remove login/register buttons
-        const authLinks = navLinks.querySelectorAll('a[href="login.html"], a[href="register.html"]');
-        authLinks.forEach(link => {
-            const li = link.closest('li');
-            if (li) li.remove();
+// Initialize dropdown toggle functionality
+function initializeDropdownToggle() {
+    const dropdownToggle = document.querySelector('.auth-dropdown-toggle');
+    const dropdownMenu = document.querySelector('.auth-dropdown-menu');
+    
+    if (dropdownToggle && dropdownMenu) {
+        dropdownToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('active');
+            const icon = dropdownToggle.querySelector('i');
+            icon.style.transform = dropdownMenu.classList.contains('active') ? 'rotate(180deg)' : '';
         });
 
-        // Add profile link if it doesn't exist
-        if (!navLinks.querySelector('a[href="profile.html"]')) {
-            const profileLi = document.createElement('li');
-            profileLi.innerHTML = '<a href="profile.html">Profile</a>';
-            if (contactLink) {
-                navLinks.insertBefore(profileLi, contactLink.closest('li').nextSibling);
-            } else {
-                navLinks.appendChild(profileLi);
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.auth-dropdown')) {
+                dropdownMenu.classList.remove('active');
+                const icon = dropdownToggle.querySelector('i');
+                icon.style.transform = '';
             }
+        });
+    }
+}
+
+// Update auth display
+function updateAuthDisplay(currentUser) {
+    const authDropdown = document.querySelector('.auth-dropdown');
+    if (authDropdown) {
+        if (currentUser) {
+            authDropdown.innerHTML = `
+                <button class="auth-dropdown-toggle">
+                    <i class="fas fa-user-circle"></i>
+                    ${currentUser.name} 
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="auth-dropdown-menu">
+                    <a href="profile.html"><i class="fas fa-user"></i>My Profile</a>
+                    <a href="#"><i class="fas fa-shopping-bag"></i>My Orders</a>
+                    <a href="#"><i class="fas fa-heart"></i>Wishlist</a>
+                    <a href="#"><i class="fas fa-cog"></i>Settings</a>
+                    <a href="#" id="headerLogout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                </div>
+            `;
+            
+            const headerLogout = document.getElementById('headerLogout');
+            if (headerLogout) {
+                headerLogout.addEventListener('click', handleLogout);
+            }
+        } else {
+            authDropdown.innerHTML = `
+                <button class="auth-dropdown-toggle">
+                    Account <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="auth-dropdown-menu">
+                    <a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a>
+                    <a href="register.html"><i class="fas fa-user-plus"></i>Register</a>
+                </div>
+            `;
         }
+        initializeDropdownToggle();
+    }
 
-        // Add logout button functionality
-        const logoutButton = document.getElementById('logoutButton');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', handleLogout);
+    // Update header-auth section
+    const headerAuth = document.querySelector('.header-auth');
+    if (headerAuth) {
+        headerAuth.innerHTML = currentUser 
+            ? `<a href="profile.html">${currentUser.name}</a><span class="divider">|</span><a href="#" id="headerLogout">Logout</a>`
+            : `<a href="login.html">Login</a><span class="divider">|</span><a href="register.html">Register</a>`;
+            
+        const headerLogout = document.getElementById('headerLogout');
+        if (headerLogout) {
+            headerLogout.addEventListener('click', handleLogout);
         }
-    } else {
-        // Reset header auth to login/register links
-        headerAuth.innerHTML = `
-            <a href="login.html">Login</a>
-            <span class="divider">|</span>
-            <a href="register.html">Register</a>
-        `;
+    }
 
-        // Remove profile link if it exists
-        const profileLink = navLinks.querySelector('a[href="profile.html"]');
-        if (profileLink) {
-            profileLink.closest('li').remove();
-        }
+    // Update navigation links
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        // Remove existing auth elements
+        const existingAuthBtns = navLinks.querySelectorAll('.login, .register');
+        existingAuthBtns.forEach(btn => btn.parentElement.remove());
 
-        // Add login/register buttons if they don't exist
-        const loginLink = navLinks.querySelector('a[href="login.html"]');
-        const registerLink = navLinks.querySelector('a[href="register.html"]');
-        const shopButton = navLinks.querySelector('.btn-shop');
-
-        if (!loginLink && !registerLink && contactLink) {
-            const loginLi = document.createElement('li');
-            const registerLi = document.createElement('li');
-
-            loginLi.innerHTML = '<a href="login.html" class="btn-nav">Login</a>';
-            registerLi.innerHTML = '<a href="register.html" class="btn-nav">Register</a>';
-
-            if (shopButton) {
-                navLinks.insertBefore(registerLi, shopButton.closest('li'));
-                navLinks.insertBefore(loginLi, registerLi);
-            } else {
-                navLinks.appendChild(loginLi);
-                navLinks.appendChild(registerLi);
+        // Add appropriate buttons based on auth state
+        const shopNowBtn = navLinks.querySelector('.btn-shop');
+        if (shopNowBtn) {
+            if (!currentUser) {
+                shopNowBtn.insertAdjacentHTML('beforebegin', `
+                    <li><a href="login.html" class="btn-nav login">Login</a></li>
+                    <li><a href="register.html" class="btn-nav register">Register</a></li>
+                `);
             }
         }
     }
+
+    // Update nav-actions
+    const navActions = document.querySelector('.nav-actions');
+    if (navActions) {
+        const existingDropdown = navActions.querySelector('.user-dropdown');
+        if (existingDropdown) {
+            existingDropdown.remove();
+        }
+
+        if (currentUser) {
+            const userDropdown = document.createElement('div');
+            userDropdown.className = 'user-dropdown';
+            userDropdown.innerHTML = `
+                <button class="user-link">
+                    <i class="fas fa-user-circle"></i>
+                    ${currentUser.name}
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                    <li><a href="#"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+                    <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            `;
+            navActions.insertBefore(userDropdown, navActions.firstChild);
+
+            // Add logout button functionality
+            const logoutButton = userDropdown.querySelector('#logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', handleLogout);
+            }
+        }
+    }
+    
+    // Update cart badge
+    updateCartBadge();
+}
+
+function showAuthFeedback(message, isError = false) {
+    const feedback = document.createElement('div');
+    feedback.className = `auth-feedback ${isError ? 'error' : 'success'}`;
+    feedback.innerHTML = `
+        <i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+        ${message}
+    `;
+    document.body.appendChild(feedback);
+    
+    // Remove feedback after 3 seconds
+    setTimeout(() => {
+        feedback.remove();
+    }, 3000);
+}
+
+function requireAuth(successCallback, message = 'Please log in to continue') {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        showAuthFeedback(message, true);
+        if (confirm('You need to login to access this feature. Would you like to login now?')) {
+            window.location.href = 'login.html';
+        }
+        return false;
+    }
+    if (typeof successCallback === 'function') {
+        successCallback();
+    }
+    return true;
 }
 
 function handleLogout(e) {
     e.preventDefault();
     localStorage.removeItem('currentUser');
-    window.location.reload();
+    localStorage.removeItem('cart');
+    showAuthFeedback('Successfully logged out. See you again!');
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 1500);
 }
 
+// Authentication form handlers
 function initializeAuthListeners() {
-    // Register form submission
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
     }
     
-    // Login form submission
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
@@ -107,13 +203,13 @@ function handleRegister(e) {
     const confirmPassword = document.getElementById('registerConfirmPassword').value;
     
     if (password !== confirmPassword) {
-        alert('Passwords do not match!');
+        showAuthFeedback('Passwords do not match!', true);
         return;
     }
     
     const users = JSON.parse(localStorage.getItem('users')) || [];
     if (users.some(user => user.email === email)) {
-        alert('User with this email already exists!');
+        showAuthFeedback('User with this email already exists!', true);
         return;
     }
     
@@ -122,8 +218,10 @@ function handleRegister(e) {
     localStorage.setItem('users', JSON.stringify(users));
     localStorage.setItem('currentUser', JSON.stringify(newUser));
     
-    alert('Registration successful! You are now logged in.');
-    window.location.href = 'index.html';
+    showAuthFeedback('Registration successful! Welcome to Timeless Art.');
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 1500);
 }
 
 function handleLogin(e) {
@@ -137,26 +235,26 @@ function handleLogin(e) {
     
     if (user) {
         localStorage.setItem('currentUser', JSON.stringify(user));
-        alert('Login successful!');
-        window.location.href = 'index.html';
+        showAuthFeedback('Welcome back, ' + user.name + '!');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
     } else {
-        alert('Invalid email or password!');
+        showAuthFeedback('Invalid email or password!', true);
     }
 }
 
-// Initialize cart badge
+// Cart badge update
 function updateCartBadge() {
     const cartToggle = document.querySelector('.cart-toggle');
+    if (!cartToggle) return;
+    
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
-    
-    if (cartToggle) {
-        cartToggle.setAttribute('data-count', itemCount);
-    }
+    cartToggle.setAttribute('data-count', itemCount);
 }
 
-// Call updateCartBadge when page loads and when cart changes
-document.addEventListener('DOMContentLoaded', updateCartBadge);
+// Listen for cart changes
 window.addEventListener('storage', function(e) {
     if (e.key === 'cart') {
         updateCartBadge();

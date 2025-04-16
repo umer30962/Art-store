@@ -1,3 +1,32 @@
+// Initialize products array
+const products = [
+    {
+        id: 1,
+        name: "Colorful Abstraction",
+        description: "Acrylic on canvas • 24\" × 36\"",
+        price: 450,
+        image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    },
+    {
+        id: 2,
+        name: "Floral Essence",
+        description: "Fine art photography • Limited edition",
+        price: 250,
+        image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    },
+    {
+        id: 3,
+        name: "Urban Dreams",
+        description: "Oil on canvas • 30\" × 40\"",
+        price: 600,
+        image: "https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    },
+    // Add more products based on your gallery items
+];
+
+// Initialize cart array
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
 // Mobile Navigation Toggle
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
@@ -13,6 +42,19 @@ document.querySelectorAll('.nav-links a').forEach(link => {
         navLinks.classList.remove('active');
         hamburger.classList.remove('active');
     });
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (navLinks.classList.contains('active') && 
+        !e.target.closest('.nav-links') && 
+        !e.target.closest('.hamburger')) {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
 });
 
 // Smooth scrolling for anchor links
@@ -80,109 +122,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartTotal = document.getElementById('cartTotal');
     const checkoutBtn = document.getElementById('checkoutBtn');
 
-    // Updated product data with your new products
-    const products = [
-        {
-            id: 1,
-            name: 'Colorful Abstraction',
-            description: 'Acrylic on canvas • 24" × 36"',
-            price: 450,
-            image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 2,
-            name: 'Floral Essence',
-            description: 'Fine art photography • Limited edition',
-            price: 250,
-            image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 3,
-            name: 'Urban Dreams',
-            description: 'Oil on canvas • 30" × 40"',
-            price: 600,
-            image: 'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 4,
-            name: 'Silent Portrait',
-            description: 'Watercolor on paper • 18" × 24"',
-            price: 350,
-            image: 'https://images.unsplash.com/photo-1508615070457-7baeba4003ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 5,
-            name: 'Mountain Serenity',
-            description: 'Oil on canvas • 20" × 30"',
-            price: 500,
-            image: 'https://images.unsplash.com/photo-1464278533981-50106e6176b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 6,
-            name: 'Ocean Waves',
-            description: 'Acrylic on canvas • 24" × 36"',
-            price: 480,
-            image: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        // Add these new products
-        {
-            id: 7,
-            name: 'Sunset Reflections',
-            description: 'Oil on canvas • 24" × 36"',
-            price: 520,
-            image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 8,
-            name: 'Abstract Harmony',
-            description: 'Mixed media • 30" × 30"',
-            price: 430,
-            image: 'https://images.unsplash.com/photo-1574182245530-967d9b3831af?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 9,
-            name: 'Forest Whispers',
-            description: 'Watercolor • 18" × 24"',
-            price: 380,
-            image: 'https://images.unsplash.com/photo-1502675135487-e971002a6adb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 10,
-            name: 'Urban Geometry',
-            description: 'Photography • Limited edition',
-            price: 290,
-            image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 11,
-            name: 'Emotion in Blue',
-            description: 'Acrylic on canvas • 36" × 48"',
-            price: 750,
-            image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        },
-        {
-            id: 12,
-            name: 'Desert Bloom',
-            description: 'Pastel on paper • 16" × 20"',
-            price: 320,
-            image: 'https://images.unsplash.com/photo-1515511856280-7b23f68d2996?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
-        }
-    ];
-
-    let cart = [];
-
+    // Shop Now button functionality
     if (shopNowBtn) {
         shopNowBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            if (!requireAuth()) return;
             shopModal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             renderProducts();
             renderCart();
-            console.log("Shop modal opened");
         });
-        console.log("Shop Now button found and listener attached");
-    } else {
-        console.log("Shop Now button not found");
     }
 
     // Close modal
@@ -234,12 +183,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add to cart function
+    // Update addToCart function
     function addToCart(e) {
+        if (!requireAuth()) return;
+        
         const productId = parseInt(e.target.getAttribute('data-id'));
         const product = products.find(p => p.id === productId);
         
-        // Check if product is already in cart
         const existingItem = cart.find(item => item.id === productId);
         
         if (existingItem) {
@@ -251,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        renderCart();
+        updateCartAndStorage();
     }
 
     // Render cart
@@ -305,6 +255,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Quantity adjustment functions
     function decreaseQuantity(e) {
+        if (!requireAuth()) return;
+
         const productId = parseInt(e.target.getAttribute('data-id'));
         const item = cart.find(item => item.id === productId);
         
@@ -314,25 +266,31 @@ document.addEventListener('DOMContentLoaded', function() {
             cart = cart.filter(item => item.id !== productId);
         }
         
-        renderCart();
+        updateCartAndStorage();
     }
 
     function increaseQuantity(e) {
+        if (!requireAuth()) return;
+
         const productId = parseInt(e.target.getAttribute('data-id'));
         const item = cart.find(item => item.id === productId);
         item.quantity += 1;
-        renderCart();
+        updateCartAndStorage();
     }
 
     function removeItem(e) {
+        if (!requireAuth()) return;
+
         const productId = parseInt(e.target.getAttribute('data-id'));
         cart = cart.filter(item => item.id !== productId);
-        renderCart();
+        updateCartAndStorage();
     }
 
     // Checkout button
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
+            if (!requireAuth()) return;
+
             if (cart.length === 0) {
                 alert('Your cart is empty!');
             } else {
@@ -354,8 +312,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Define showProductDetails globally (single definition)
+// Add authentication check function for gallery view buttons
+function checkAuthAndShowDetails(e) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        if (confirm('You need to login to view product details. Would you like to login now?')) {
+            window.location.href = 'login.html';
+        }
+        return;
+    }
+    showProductDetails(e);
+}
+
+// Update showProductDetails function
 function showProductDetails(e) {
+    if (!requireAuth()) return;
+    
     console.log('View Details clicked:', e.target);
     const productCard = e.target.closest('.art-item') || e.target.closest('.product-card');
 
@@ -499,11 +471,12 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Search functionality
+// Update search functionality
 if (searchButton) {
     searchButton.addEventListener('click', () => {
         const searchTerm = searchInput.value.toLowerCase();
-        const artItems = document.querySelectorAll('.art-item');
+        const artItems = document.querySelectorAll('.art-item, .product-card');
+        let hasResults = false;
         
         artItems.forEach(item => {
             const title = item.querySelector('h3').textContent.toLowerCase();
@@ -511,20 +484,43 @@ if (searchButton) {
             
             if (title.includes(searchTerm) || description.includes(searchTerm)) {
                 item.style.display = 'block';
-                item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                hasResults = true;
+                if (!item.closest('.shop-modal')) {
+                    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             } else {
                 item.style.display = 'none';
             }
         });
         
+        if (!hasResults) {
+            alert('No results found. Please try a different search term.');
+        }
+        
         searchOverlay.classList.remove('active');
+        searchInput.value = '';
+    });
+    
+    // Add keyboard support for search
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchButton.click();
+        }
     });
 }
 
-// Cart functionality
+// Update cart toggle functionality
 const cartToggle = document.querySelector('.cart-toggle');
 if (cartToggle) {
     cartToggle.addEventListener('click', () => {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            if (confirm('You need to login to view your cart. Would you like to login now?')) {
+                window.location.href = 'login.html';
+            }
+            return;
+        }
+
         const shopModal = document.getElementById('shopModal');
         if (shopModal) {
             shopModal.style.display = 'block';
@@ -534,4 +530,121 @@ if (cartToggle) {
             if (typeof renderCart === 'function') renderCart();
         }
     });
+}
+
+// Newsletter functionality
+const newsletterForm = document.querySelector('.newsletter-form');
+if (newsletterForm) {
+    newsletterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = newsletterForm.querySelector('input[type="email"]').value;
+        
+        // Store subscription in localStorage
+        const subscribers = JSON.parse(localStorage.getItem('subscribers')) || [];
+        if (!subscribers.includes(email)) {
+            subscribers.push(email);
+            localStorage.setItem('subscribers', JSON.stringify(subscribers));
+            alert('Thank you for subscribing to our newsletter!');
+        } else {
+            alert('This email is already subscribed to our newsletter.');
+        }
+        
+        newsletterForm.reset();
+    });
+}
+
+// Contact form functionality
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = contactForm.querySelector('input[type="text"]').value;
+        const email = contactForm.querySelector('input[type="email"]').value;
+        const message = contactForm.querySelector('textarea').value;
+        
+        // Store message in localStorage
+        const messages = JSON.parse(localStorage.getItem('contactMessages')) || [];
+        messages.push({
+            name,
+            email,
+            message,
+            date: new Date().toISOString()
+        });
+        localStorage.setItem('contactMessages', JSON.stringify(messages));
+        
+        alert('Thank you for your message! We will get back to you soon.');
+        contactForm.reset();
+    });
+});
+
+// Shopping and Authentication logic
+function requireAuth(redirectUrl) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        if (confirm('You need to login to access this feature. Would you like to login now?')) {
+            window.location.href = 'login.html';
+        }
+        return false;
+    }
+    return true;
+}
+
+// Shop Now button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const shopNowBtn = document.getElementById('shopNowButton');
+    const shopModal = document.getElementById('shopModal');
+    
+    if (shopNowBtn) {
+        shopNowBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (requireAuth('login.html')) {
+                shopModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                renderProducts();
+                renderCart();
+            }
+        });
+    }
+
+    // View Details functionality for gallery items
+    document.querySelectorAll('.btn-art').forEach(button => {
+        button.addEventListener('click', (e) => {
+            if (requireAuth('login.html')) {
+                showProductDetails(e);
+            }
+        });
+    });
+
+    // Cart toggle functionality
+    const cartToggle = document.querySelector('.cart-toggle');
+    if (cartToggle) {
+        cartToggle.addEventListener('click', () => {
+            if (requireAuth('login.html')) {
+                const shopModal = document.getElementById('shopModal');
+                shopModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                if (typeof renderProducts === 'function') renderProducts();
+                if (typeof renderCart === 'function') renderCart();
+            }
+        });
+    }
+
+    // ... rest of the existing script.js code ...
+});
+
+// Update cart and storage
+function updateCartAndStorage() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Update cart display if cart section exists
+    if (document.getElementById('cartItems')) {
+        renderCart();
+    }
+    
+    // Update cart badge count
+    const cartToggle = document.querySelector('.cart-toggle');
+    if (cartToggle) {
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartToggle.setAttribute('data-count', totalItems);
+    }
 }
