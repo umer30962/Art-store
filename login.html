@@ -9,23 +9,6 @@
 </head>
 <body>
     <header class="main-header">
-        <div class="header-top">
-            <div class="header-contact">
-                <span><i class="fas fa-phone"></i> +92-316 107 179</span>
-                <span><i class="fas fa-envelope"></i> info@timelessart.com</span>
-            </div>
-            <div class="header-auth">
-                <div class="auth-dropdown">
-                    <button class="auth-dropdown-toggle">
-                        Account <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="auth-dropdown-menu">
-                        <a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a>
-                        <a href="register.html"><i class="fas fa-user-plus"></i>Register</a>
-                    </div>
-                </div>
-            </div>
-        </div>
         <nav class="main-nav">
             <div class="nav-wrapper">
                 <div class="logo-container">
@@ -35,33 +18,37 @@
                         <span class="logo-subtext">ART</span>
                     </a>
                 </div>
+                
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="index.html#gallery">Gallery</a></li>
                     <li><a href="index.html#artists">Artists</a></li>
                     <li><a href="index.html#about">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
-                    <li><a href="login.html" class="btn-nav login">Login</a></li>
-                    <li><a href="register.html" class="btn-nav register">Register</a></li>
-                    <li><a href="#" class="btn-nav btn-shop" id="shopNowButton">Shop Now</a></li>
                 </ul>
+
                 <div class="nav-actions">
+                    <div class="auth-dropdown">
+                        <button class="auth-toggle">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Account</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="auth-menu">
+                            <a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a>
+                            <a href="register.html"><i class="fas fa-user-plus"></i>Register</a>
+                        </div>
+                    </div>
                     <button class="search-toggle"><i class="fas fa-search"></i></button>
-                    <button class="cart-toggle"><i class="fas fa-shopping-bag"></i></button>
-                </div>
-                <div class="hamburger">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
+                    <button class="cart-toggle"><i class="fas fa-shopping-cart"></i></button>
+                    <button class="mobile-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </div>
         </nav>
-        <div class="search-overlay">
-            <div class="search-container">
-                <input type="text" placeholder="Search for art...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-        </div>
     </header>
 
     <section class="auth-section">

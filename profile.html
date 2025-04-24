@@ -9,17 +9,6 @@
 </head>
 <body>
     <header class="main-header">
-        <div class="header-top">
-            <div class="header-contact">
-                <span><i class="fas fa-phone"></i> +92-316 107 179</span>
-                <span><i class="fas fa-envelope"></i> info@timelessart.com</span>
-            </div>
-            <div class="header-auth">
-                <a href="login.html">Login</a>
-                <span class="divider">|</span>
-                <a href="register.html">Register</a>
-            </div>
-        </div>
         <nav class="main-nav">
             <div class="nav-wrapper">
                 <div class="logo-container">
@@ -29,23 +18,34 @@
                         <span class="logo-subtext">ART</span>
                     </a>
                 </div>
+                
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="index.html#gallery">Gallery</a></li>
                     <li><a href="index.html#artists">Artists</a></li>
                     <li><a href="index.html#about">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
-                    <li><a href="#" class="btn-nav btn-shop" id="shopNowButton">Shop Now</a></li>
-                    <li><a href="profile.html" class="btn-nav">Profile</a></li>
                 </ul>
+
                 <div class="nav-actions">
+                    <div class="auth-dropdown">
+                        <button class="auth-toggle">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userDisplayName">Account</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="auth-menu">
+                            <a href="profile.html"><i class="fas fa-user"></i>Profile</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                        </div>
+                    </div>
                     <button class="search-toggle"><i class="fas fa-search"></i></button>
-                    <button class="cart-toggle"><i class="fas fa-shopping-bag"></i></button>
-                </div>
-                <div class="hamburger">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
+                    <button class="cart-toggle"><i class="fas fa-shopping-cart"></i></button>
+                    <button class="mobile-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </div>
         </nav>
@@ -60,14 +60,21 @@
     <section class="profile-section">
         <div class="profile-container">
             <h2>My Profile</h2>
-            <div class="profile-info" id="profileInfo">
-                <!-- Profile info will be loaded here -->
+            <div class="profile-info">
+                <div class="profile-field">
+                    <span class="field-label">Name:</span>
+                    <span id="profileName"></span>
+                </div>
+                <div class="profile-field">
+                    <span class="field-label">Email:</span>
+                    <span id="profileEmail"></span>
+                </div>
             </div>
+            
             <div class="profile-orders">
-                <h3>My Orders</h3>
-                <div class="orders-list" id="ordersList">
-                    <!-- Orders will be loaded here -->
-                    <p>You haven't placed any orders yet.</p>
+                <h3>Order History</h3>
+                <div id="orderHistory">
+                    <!-- Order history will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -75,30 +82,5 @@
 
     <script src="script.js"></script>
     <script src="auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const profileInfo = document.getElementById('profileInfo');
-            
-            if (currentUser) {
-                profileInfo.innerHTML = `
-                    <div class="profile-field">
-                        <span class="field-label">Name:</span>
-                        <span class="field-value">${currentUser.name}</span>
-                    </div>
-                    <div class="profile-field">
-                        <span class="field-label">Email:</span>
-                        <span class="field-value">${currentUser.email}</span>
-                    </div>
-                    <div class="profile-field">
-                        <span class="field-label">Member Since:</span>
-                        <span class="field-value">${new Date().toLocaleDateString()}</span>
-                    </div>
-                `;
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-    </script>
 </body>
 </html>
