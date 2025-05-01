@@ -159,13 +159,24 @@ document.querySelectorAll('.art-item, .artist-card, .about-content, .contact-con
 window.addEventListener('scroll', animateOnScroll);
 window.addEventListener('load', animateOnScroll);
 
-// Improve product details functionality with error handling
-function showProductDetails(event) {
-    if (!requireAuth()) {
-        showFeedback('Please log in to view product details', 'error');
-        return;
-    }
+// Show feedback function
+function showFeedback(message, type = 'success') {
+    const feedback = document.createElement('div');
+    feedback.className = `auth-feedback ${type}`;
+    feedback.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
     
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.remove();
+    }, 3000);
+}
+
+// Improve product details functionality with more detailed information
+function showProductDetails(event) {
     const productId = parseInt(event.currentTarget.dataset.id);
     const product = products.find(p => p.id === productId);
     
@@ -174,31 +185,97 @@ function showProductDetails(event) {
         return;
     }
     
+    // Enhanced product details with more information
     const modal = document.createElement('div');
     modal.className = 'product-modal';
     modal.innerHTML = `
         <div class="product-modal-content">
             <span class="close-modal">&times;</span>
-            <img src="${product.image}" alt="${product.name}" onerror="this.src='placeholder.jpg'">
-            <h3>${product.name}</h3>
-            <p>${product.description}</p>
-            <p class="price">$${product.price.toFixed(2)}</p>
-            <button class="btn-add-to-cart" data-id="${product.id}">Add to Cart</button>
+            <div class="product-details-grid">
+                <div class="product-details-image">
+                    <img src="${product.image}" alt="${product.name}" onerror="this.src='placeholder.jpg'">
+                </div>
+                <div class="product-details-info">
+                    <h2>${product.name}</h2>
+                    <p class="artist-name">By Sarah Johnson</p>
+                    <div class="product-specs">
+                        <p><strong>Medium:</strong> ${product.description.split('•')[0].trim()}</p>
+                        <p><strong>Size:</strong> ${product.description.split('•')[1]?.trim() || 'Dimensions vary'}</p>
+                        <p><strong>Year:</strong> 2024</p>
+                        <p><strong>Style:</strong> Contemporary</p>
+                    </div>
+                    <p class="product-description">
+                        This stunning piece showcases the artist's masterful technique and unique vision. 
+                        The artwork demonstrates exceptional craftsmanship and attention to detail, 
+                        making it a valuable addition to any collection. Each piece is original and 
+                        comes with a certificate of authenticity.
+                    </p>
+                    <p class="product-price-large">$${product.price.toFixed(2)}</p>
+                    <div class="product-actions">
+                        <button class="btn btn-add-to-cart" data-id="${product.id}">Add to Cart</button>
+                        <button class="btn btn-outline inquire-button">Inquire</button>
+                    </div>
+                    <div class="product-details-extras">
+                        <div class="detail-item">
+                            <h4>Shipping</h4>
+                            <p>Free worldwide shipping • Delivery within 5-7 business days</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4>Returns</h4>
+                            <p>30-day money-back guarantee for undamaged items</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4>Authenticity</h4>
+                            <p>Includes certificate of authenticity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
     
     document.body.appendChild(modal);
     
     // Add event listeners
-    modal.querySelector('.close-modal').addEventListener('click', () => modal.remove());
-    modal.querySelector('.btn-add-to-cart').addEventListener('click', () => {
-        addToCart(product.id);
+    const closeBtn = modal.querySelector('.close-modal');
+    const addToCartBtn = modal.querySelector('.btn-add-to-cart');
+    const inquireBtn = modal.querySelector('.inquire-button');
+    
+    closeBtn.addEventListener('click', () => modal.remove());
+    
+    addToCartBtn.addEventListener('click', () => {
+        addToCart(product);
+        showFeedback('Item added to cart successfully');
+        modal.remove();
+    });
+    
+    inquireBtn.addEventListener('click', () => {
+        window.location.href = `#contact?product=${product.id}`;
         modal.remove();
     });
     
     window.addEventListener('click', (e) => {
         if (e.target === modal) modal.remove();
     });
+}
+
+// Add to cart function without authentication
+function addToCart(product) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(item => item.id === product.id);
+    
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            ...product,
+            quantity: 1
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    showFeedback('Item added to cart!');
 }
 
 // Cart functionality with error handling
