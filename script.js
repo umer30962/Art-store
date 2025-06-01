@@ -87,21 +87,25 @@ const products = [
 ];
 
 // Mobile Navigation Toggle
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
 
-hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    hamburger.classList.toggle('active');
-});
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
 
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (navLinks.classList.contains('active') && 
-        !e.target.closest('.nav-links') && 
-        !e.target.closest('.hamburger')) {
-        navLinks.classList.remove('active');
-        hamburger.classList.remove('active');
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('active') && 
+                !e.target.closest('.nav-links') && 
+                !e.target.closest('.hamburger')) {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
     }
 });
 
@@ -239,12 +243,9 @@ function showProductDetails(event) {
     // Add event listeners
     const closeBtn = modal.querySelector('.close-modal');
     const addToCartBtn = modal.querySelector('.btn-add-to-cart');
-    const inquireBtn = modal.querySelector('.inquire-button');
-    
-    closeBtn.addEventListener('click', () => modal.remove());
-    
+    const inquireBtn = modal.querySelector('.inquire-button');    closeBtn.addEventListener('click', () => modal.remove());
     addToCartBtn.addEventListener('click', () => {
-        addToCart(product);
+        cart.addItem(product);
         showFeedback('Item added to cart successfully');
         modal.remove();
     });
@@ -289,9 +290,6 @@ function displaySearchResults(results, query) {
     }
 }
 
-// Import auth module from auth.js
-const { auth } = window;
-
 // DOM Elements Cache
 const elements = {
     authDropdown: () => document.querySelector('.auth-dropdown'),
@@ -303,9 +301,16 @@ const elements = {
 
 // Initialize App
 function initializeApp() {
-    auth.init();
+    // Check if auth is available (loaded from auth.js)
+    if (window.auth) {
+        window.auth.init();
+    }
     initializeEventListeners();
-    initializeDropdownToggle();
+    
+    // initializeDropdownToggle is defined in auth.js, skip if not available
+    if (typeof initializeDropdownToggle === 'function') {
+        initializeDropdownToggle();
+    }
     
     if (window.location.pathname.includes('profile.html')) {
         initializeProfile();
@@ -339,7 +344,7 @@ function initializeMobileMenu() {
 
 // Profile Page
 function initializeProfile() {
-    if (!auth.requireAuth()) {
+    if (!window.auth || !window.auth.requireAuth()) {
         window.location.href = 'login.html';
         return;
     }
@@ -350,20 +355,20 @@ function initializeProfile() {
 
 function displayUserProfile() {
     const profileInfo = document.getElementById('profileInfo');
-    if (!profileInfo || !auth.currentUser) return;
+    if (!profileInfo || !window.auth || !window.auth.currentUser) return;
     
     profileInfo.innerHTML = `
-        <h2>${auth.currentUser.name}'s Profile</h2>
-        <p>Email: ${auth.currentUser.email}</p>
+        <h2>${window.auth.currentUser.name}'s Profile</h2>
+        <p>Email: ${window.auth.currentUser.email}</p>
     `;
 }
 
 function displayOrderHistory() {
     const orderHistory = document.getElementById('orderHistory');
-    if (!orderHistory || !auth.currentUser) return;
+    if (!orderHistory || !window.auth || !window.auth.currentUser) return;
     
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const userOrders = orders.filter(order => order.userEmail === auth.currentUser.email);
+    const userOrders = orders.filter(order => order.userEmail === window.auth.currentUser.email);
     
     orderHistory.innerHTML = userOrders.length ? 
         userOrders.map(order => createOrderElement(order)).join('') :
@@ -387,14 +392,9 @@ function handleStorageChange(e) {
     }
 }
 
-// Initialize the application
-document.addEventListener('DOMContentLoaded', initializeApp);
-
 // Cart Management
 const cart = {
-    items: [],
-    
-    init() {
+    items: [],    init() {
         this.loadCart();
         this.setupEventListeners();
         this.updateCartDisplay();
@@ -403,16 +403,18 @@ const cart = {
         if (window.location.pathname.includes('cart.html')) {
             this.renderCartPage();
         }
-    },
-    
-    setupEventListeners() {
-        // Add to cart buttons
-        document.querySelectorAll('.btn-add-to-cart').forEach(button => {
-            button.addEventListener('click', (e) => {
+    },    setupEventListeners() {
+        // Use event delegation for add to cart buttons (including modal buttons)
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.btn-add-to-cart')) {
+                e.preventDefault();
+                e.stopPropagation();
                 const productId = parseInt(e.target.dataset.id);
                 const product = products.find(p => p.id === productId);
-                if (product) this.addItem(product);
-            });
+                if (product) {
+                    this.addItem(product);
+                }
+            }
         });
         
         // Quantity buttons on cart page
@@ -440,9 +442,7 @@ const cart = {
     saveCart() {
         localStorage.setItem('cart', JSON.stringify(this.items));
         this.updateCartDisplay();
-    },
-    
-    addItem(product) {
+    },    addItem(product) {
         const existingItem = this.items.find(item => item.id === product.id);
         if (existingItem) {
             existingItem.quantity = (existingItem.quantity || 1) + 1;
@@ -450,7 +450,7 @@ const cart = {
             this.items.push({ ...product, quantity: 1 });
         }
         this.saveCart();
-        showFeedback('Added to cart');
+        showFeedback('Added to cart successfully!');
     },
     
     removeItem(productId) {
@@ -557,9 +557,16 @@ const cart = {
     }
 };
 
-// Initialize cart when DOM loads
+// Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     cart.init();
+      // Initialize product detail buttons with event delegation
+    document.addEventListener('click', (e) => {
+        if (e.target.matches('.btn-art')) {
+            e.preventDefault();
+            showProductDetails(e);
+        }
+    });
     
     // Initialize search functionality
     const searchForm = document.querySelector('.search-form');
@@ -590,10 +597,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Search functionality
+// Search functionality for navigation bar
 document.addEventListener('DOMContentLoaded', () => {
-    // ...existing code...
-    
     const searchInput = document.querySelector('.nav-search-input');
     const searchIcon = document.querySelector('.search-toggle');
     
@@ -624,3 +629,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Initialize app on page load
+document.addEventListener('DOMContentLoaded', initializeApp);
