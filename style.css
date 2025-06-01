@@ -379,6 +379,10 @@ nav {
     transform: translateX(-100%);
 }
 
+.slide.next {
+    transform: translateX(100%);
+}
+
 .slide.no-transition {
     transition: none;
 }

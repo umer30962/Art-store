@@ -115,8 +115,7 @@ function initializeHeroSlideshow() {
     setTimeout(() => {
         allSlides.forEach(slide => slide.classList.remove('no-transition'));
     }, 100);
-    
-    function showNextSlide() {
+      function showNextSlide() {
         if (isTransitioning) return; // Prevent overlapping transitions
         isTransitioning = true;
         
@@ -151,11 +150,10 @@ function initializeHeroSlideshow() {
                     allSlides.forEach(slide => slide.classList.remove('no-transition'));
                     isTransitioning = false;
                 }, 50);
-                
-                // Clean up all slide classes
+                  // Clean up all slide classes
                 allSlides.forEach((slide, index) => {
                     if (index !== currentSlide && index !== totalSlides - 1) {
-                        slide.classList.remove('prev', 'active');
+                        slide.classList.remove('prev', 'active', 'next');
                     }
                 });
             }, 600); // Wait for slide transition to complete
@@ -163,53 +161,94 @@ function initializeHeroSlideshow() {
             // Normal slide transition
             allSlides[currentSlide].classList.remove('prev');
             allSlides[currentSlide].classList.add('active');
-            
-            // Clean up previous slides after animation completes
+              // Clean up previous slides after animation completes
             setTimeout(() => {
                 allSlides.forEach((slide, index) => {
                     if (index !== currentSlide) {
-                        slide.classList.remove('prev', 'active');
+                        slide.classList.remove('prev', 'active', 'next');
                     }
                 });
                 isTransitioning = false;
             }, 600);
         }
-    }
-    
-    function showPrevSlide() {
+    }    function showPrevSlide() {
         if (isTransitioning) return; // Prevent overlapping transitions
         isTransitioning = true;
         
-        // Move current slide to the right
-        allSlides[currentSlide].classList.remove('active');
-        
-        // Move to previous slide
+        // Handle looping to last slide
         if (currentSlide === 0) {
-            // Jump to clone slide instantly (invisible to user)
+            // For seamless loop, jump to clone slide first
             allSlides.forEach(slide => slide.classList.add('no-transition'));
-            currentSlide = totalSlides - 1;
+            
+            // Hide current slide and show clone instantly
+            allSlides[currentSlide].classList.remove('active');
+            currentSlide = totalSlides - 1; // Move to clone
             allSlides[currentSlide].classList.add('active');
             
             // Force reflow
             allSlides[currentSlide].offsetHeight;
             
-            // Re-enable transitions and move to actual last slide
+            // Re-enable transitions and animate to real last slide
             setTimeout(() => {
                 allSlides.forEach(slide => slide.classList.remove('no-transition'));
+                
+                // Move clone to right (exit)
                 allSlides[currentSlide].classList.remove('active');
+                allSlides[currentSlide].classList.add('next');
+                
+                // Show real last slide from left
                 currentSlide = originalSlidesCount - 1;
+                
+                // First, position the target slide on the left without transition
+                allSlides[currentSlide].classList.add('no-transition');
+                allSlides[currentSlide].classList.remove('prev', 'next');
+                allSlides[currentSlide].classList.add('prev'); // Position on left
+                
+                // Force reflow
+                allSlides[currentSlide].offsetHeight;
+                
+                // Re-enable transitions and slide to center
+                allSlides[currentSlide].classList.remove('no-transition');
+                allSlides[currentSlide].classList.remove('prev');
                 allSlides[currentSlide].classList.add('active');
-                isTransitioning = false;
+                
+                setTimeout(() => {
+                    // Clean up
+                    allSlides.forEach((slide, index) => {
+                        if (index !== currentSlide) {
+                            slide.classList.remove('prev', 'active', 'next');
+                        }
+                    });
+                    isTransitioning = false;
+                }, 600);
             }, 50);
         } else {
+            // Normal previous slide transition
+            // Move current slide to right (exit)
+            allSlides[currentSlide].classList.remove('active');
+            allSlides[currentSlide].classList.add('next');
+            
+            // Move to previous slide
             currentSlide--;
+            
+            // Position previous slide on the left first (without transition)
+            allSlides[currentSlide].classList.add('no-transition');
+            allSlides[currentSlide].classList.remove('prev', 'next');
+            allSlides[currentSlide].classList.add('prev'); // Position on left
+            
+            // Force reflow to apply position
+            allSlides[currentSlide].offsetHeight;
+            
+            // Re-enable transitions and slide to center
+            allSlides[currentSlide].classList.remove('no-transition');
+            allSlides[currentSlide].classList.remove('prev');
             allSlides[currentSlide].classList.add('active');
             
             // Clean up after animation
             setTimeout(() => {
                 allSlides.forEach((slide, index) => {
                     if (index !== currentSlide) {
-                        slide.classList.remove('prev', 'active');
+                        slide.classList.remove('prev', 'active', 'next');
                     }
                 });
                 isTransitioning = false;
@@ -234,9 +273,7 @@ function initializeHeroSlideshow() {
     
     // Manual navigation event listeners
     const prevButton = document.getElementById('prevSlide');
-    const nextButton = document.getElementById('nextSlide');
-    
-    if (prevButton) {
+    const nextButton = document.getElementById('nextSlide');    if (prevButton) {
         prevButton.addEventListener('click', () => {
             showPrevSlide();
             restartAutoSlide(); // Restart auto-slide timer
