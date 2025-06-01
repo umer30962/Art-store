@@ -86,8 +86,33 @@ const products = [
     }
 ];
 
+// Hero Slideshow Functionality
+function initializeHeroSlideshow() {
+    const slides = document.querySelectorAll('.hero-slideshow .slide');
+    let currentSlide = 0;
+    
+    if (slides.length === 0) return;
+    
+    function showNextSlide() {
+        // Remove active class from current slide
+        slides[currentSlide].classList.remove('active');
+        
+        // Move to next slide (with loop back to first)
+        currentSlide = (currentSlide + 1) % slides.length;
+        
+        // Add active class to new current slide
+        slides[currentSlide].classList.add('active');
+    }
+    
+    // Start the slideshow - change image every 4 seconds
+    setInterval(showNextSlide, 4000);
+}
+
 // Mobile Navigation Toggle
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize hero slideshow
+    initializeHeroSlideshow();
+    
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
