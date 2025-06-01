@@ -88,20 +88,86 @@ const products = [
 
 // Hero Slideshow Functionality
 function initializeHeroSlideshow() {
-    const slides = document.querySelectorAll('.hero-slideshow .slide');
+    const slideshowContainer = document.querySelector('.hero-slideshow');
+    const originalSlides = document.querySelectorAll('.hero-slideshow .slide');
     let currentSlide = 0;
+    let isTransitioning = false;
     
-    if (slides.length === 0) return;
+    if (originalSlides.length === 0) return;
+    
+    // Clone the first slide and append it at the end for seamless loop
+    const firstSlide = originalSlides[0];
+    const clonedSlide = firstSlide.cloneNode(true);
+    clonedSlide.classList.add('slide-clone');
+    clonedSlide.classList.remove('active'); // Remove any existing active class
+    slideshowContainer.appendChild(clonedSlide);
+    
+    // Get all slides including the cloned one
+    const allSlides = document.querySelectorAll('.hero-slideshow .slide');
+    const totalSlides = allSlides.length;
+    const originalSlidesCount = originalSlides.length;
+    
+    // Initialize - set first slide as active
+    allSlides[0].classList.add('active');
     
     function showNextSlide() {
-        // Remove active class from current slide
-        slides[currentSlide].classList.remove('active');
+        if (isTransitioning) return; // Prevent overlapping transitions
+        isTransitioning = true;
         
-        // Move to next slide (with loop back to first)
-        currentSlide = (currentSlide + 1) % slides.length;
+        // Move current slide to the left
+        allSlides[currentSlide].classList.remove('active');
+        allSlides[currentSlide].classList.add('prev');
         
-        // Add active class to new current slide
-        slides[currentSlide].classList.add('active');
+        // Move to next slide
+        currentSlide++;
+        
+        // Check if we're at the cloned slide (last slide)
+        if (currentSlide === totalSlides - 1) {
+            // Show the clone slide (which looks like the first slide)
+            allSlides[currentSlide].classList.remove('prev');
+            allSlides[currentSlide].classList.add('active');
+            
+            // After the transition completes, instantly jump back to the real first slide
+            setTimeout(() => {
+                // Disable transitions for all slides
+                allSlides.forEach(slide => slide.classList.add('no-transition'));
+                
+                // Hide clone and show first slide instantly
+                allSlides[currentSlide].classList.remove('active');
+                currentSlide = 0;
+                allSlides[currentSlide].classList.add('active');
+                
+                // Force a reflow to ensure the instant change happens
+                allSlides[currentSlide].offsetHeight;
+                
+                // Re-enable transitions after the instant jump
+                setTimeout(() => {
+                    allSlides.forEach(slide => slide.classList.remove('no-transition'));
+                    isTransitioning = false;
+                }, 50);
+                
+                // Clean up all slide classes
+                allSlides.forEach((slide, index) => {
+                    if (index !== currentSlide && index !== totalSlides - 1) {
+                        slide.classList.remove('prev', 'active');
+                    }
+                });
+            }, 600); // Wait for slide transition to complete
+        } else {
+            // Normal slide transition
+            allSlides[currentSlide].classList.remove('prev');
+            allSlides[currentSlide].classList.add('active');
+            
+            // Clean up previous slides after animation completes
+            setTimeout(() => {
+                allSlides.forEach((slide, index) => {
+                    if (index !== currentSlide) {
+                        slide.classList.remove('prev', 'active');
+                    }
+                });
+                isTransitioning = false;
+            }, 600);
+        }
     }
     
     // Start the slideshow - change image every 4 seconds
