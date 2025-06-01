@@ -367,6 +367,10 @@ nav {
     transition: transform 0.6s ease-in-out;
 }
 
+.slide:first-child {
+    transform: translateX(0); /* First slide starts in position */
+}
+
 .slide.active {
     transform: translateX(0);
 }

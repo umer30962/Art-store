@@ -102,14 +102,19 @@ function initializeHeroSlideshow() {
     clonedSlide.classList.add('slide-clone');
     clonedSlide.classList.remove('active'); // Remove any existing active class
     slideshowContainer.appendChild(clonedSlide);
-    
-    // Get all slides including the cloned one
+      // Get all slides including the cloned one
     const allSlides = document.querySelectorAll('.hero-slideshow .slide');
     const totalSlides = allSlides.length;
     const originalSlidesCount = originalSlides.length;
     
-    // Initialize - set first slide as active
+    // Initialize - set first slide as active immediately without transition
+    allSlides.forEach(slide => slide.classList.add('no-transition'));
     allSlides[0].classList.add('active');
+    
+    // Force reflow and then re-enable transitions for future slides
+    setTimeout(() => {
+        allSlides.forEach(slide => slide.classList.remove('no-transition'));
+    }, 100);
     
     function showNextSlide() {
         if (isTransitioning) return; // Prevent overlapping transitions
@@ -251,9 +256,10 @@ function initializeHeroSlideshow() {
         heroSection.addEventListener('mouseenter', stopAutoSlide);
         heroSection.addEventListener('mouseleave', startAutoSlide);
     }
-    
-    // Start the auto slideshow
-    startAutoSlide();
+      // Start the auto slideshow with a delay to let the first slide be visible
+    setTimeout(() => {
+        startAutoSlide();
+    }, 2000); // 2 second delay before auto-sliding starts
 }
 
 // Mobile Navigation Toggle
