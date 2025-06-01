@@ -239,16 +239,14 @@ function showProductDetails(event) {
     `;
     
     document.body.appendChild(modal);
-    
-    // Add event listeners
+      // Add event listeners
     const closeBtn = modal.querySelector('.close-modal');
-    const addToCartBtn = modal.querySelector('.btn-add-to-cart');
-    const inquireBtn = modal.querySelector('.inquire-button');    closeBtn.addEventListener('click', () => modal.remove());
-    addToCartBtn.addEventListener('click', () => {
-        cart.addItem(product);
-        showFeedback('Item added to cart successfully');
-        modal.remove();
-    });
+    const inquireBtn = modal.querySelector('.inquire-button');
+    
+    closeBtn.addEventListener('click', () => modal.remove());
+    
+    // Note: Add to Cart is handled by event delegation in cart.setupEventListeners()
+    // No need to add a direct event listener here to avoid duplicate additions
     
     inquireBtn.addEventListener('click', () => {
         window.location.href = `#contact?product=${product.id}`;
@@ -413,6 +411,12 @@ const cart = {
                 const product = products.find(p => p.id === productId);
                 if (product) {
                     this.addItem(product);
+                    
+                    // If this button is in a modal, close the modal
+                    const modal = e.target.closest('.product-modal');
+                    if (modal) {
+                        modal.remove();
+                    }
                 }
             }
         });
