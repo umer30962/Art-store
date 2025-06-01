@@ -10,6 +10,21 @@
 </head>
 
 <body>
+    <!-- Top Ad Banner -->
+    <div class="ad-banner ad-banner-top">
+        <div class="ad-content">
+            <div class="ad-banner-wrapper">
+                <img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&h=120&q=80"
+                    alt="Art Supplies Sale" class="ad-image">
+                <div class="ad-text">
+                    <span class="ad-title">🎨 SPRING ART SALE</span>
+                    <span class="ad-subtitle">Up to 40% off premium art supplies & framing services</span>
+                    <span class="ad-cta">Shop Now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <header class="main-header">
         <nav class="main-nav">
             <div class="nav-wrapper">
@@ -20,7 +35,7 @@
                         <span class="logo-subtext">ART</span>
                     </a>
                 </div>
-                
+
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="#gallery">Gallery</a></li>
@@ -63,42 +78,60 @@
             <div class="search-container">
                 <input type="text" placeholder="Search for art...">
                 <button><i class="fas fa-search"></i></button>
+            </div>        </div>    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <!-- Background Slideshow -->
+        <div class="hero-slideshow">
+            <div class="slide"
+                style="background-image: url('https://images.unsplash.com/photo-1547891654-e66ed7ebb968?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
+            </div>
+            <div class="slide"
+                style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
+            </div>
+            <div class="slide"
+                style="background-image: url('https://images.unsplash.com/photo-1561214115-f2f134cc4912?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
+            </div>
+            <div class="slide"
+                style="background-image: url('https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
+            </div>
+            <div class="slide"
+                style="background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
+            </div>
+            <div class="slide"
+                style="background-image: url('https://images.unsplash.com/photo-1536924940846-227afb31e2a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
+            </div>
+            <div class="slide"
+                style="background-image: url('https://images.unsplash.com/photo-1578321272176-b7bbc0679853?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
             </div>
         </div>
-    </header>    <!-- Hero Section -->
-    <section class="hero" id="home">        <!-- Background Slideshow -->        <div class="hero-slideshow">
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1547891654-e66ed7ebb968?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1561214115-f2f134cc4912?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1536924940846-227afb31e2a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1578321272176-b7bbc0679853?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
-        </div>
-        
+
         <!-- Slideshow Navigation Arrows -->
         <div class="slideshow-nav">
             <button class="nav-arrow nav-arrow-left" id="prevSlide" aria-label="Previous slide">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
             <button class="nav-arrow nav-arrow-right" id="nextSlide" aria-label="Next slide">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
-          <!-- Dark overlay for text readability -->
+        <!-- Dark overlay for text readability -->
         <div class="hero-overlay"></div>
-        
+
         <!-- Glassmorphic overlay with animation -->
         <div class="glassmorphic-overlay">
             <div class="glass-panel">
                 <div class="shimmer-effect"></div>
             </div>
         </div>
-        
+
         <div class="hero-content">
             <h1>Discover Beautiful Artwork</h1>
             <p>Explore our curated collection of original paintings, photography, and digital art from talented artists
@@ -106,9 +139,9 @@
             <div class="hero-buttons">
                 <a href="#gallery" class="btn">View Gallery</a>
                 <a href="#" id="shopNowButton" class="btn btn-outline">Shop Now</a>
-            </div>
-        </div>
+            </div>        </div>
     </section>
+
 
     <!-- Featured Gallery -->
     <section class="gallery-section" id="gallery">
