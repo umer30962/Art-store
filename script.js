@@ -88,221 +88,173 @@ const products = [
 
 // Hero Slideshow Functionality
 function initializeHeroSlideshow() {
-    const slideshowContainer = document.querySelector('.hero-slideshow');
-    const originalSlides = document.querySelectorAll('.hero-slideshow .slide');
-    let currentSlide = 0;
-    let isTransitioning = false;
+    const slides = document.querySelectorAll('.hero-slideshow .slide');
+    const indicators = document.querySelectorAll('.slideshow-indicators .indicator');
+    let currentSlideIndex = 0;
+    let isAnimating = false;
     let autoSlideInterval;
     
-    if (originalSlides.length === 0) return;
+    if (slides.length === 0) return;
     
-    // Clone the first slide and append it at the end for seamless loop
-    const firstSlide = originalSlides[0];
-    const clonedSlide = firstSlide.cloneNode(true);
-    clonedSlide.classList.add('slide-clone');
-    clonedSlide.classList.remove('active'); // Remove any existing active class
-    slideshowContainer.appendChild(clonedSlide);
-      // Get all slides including the cloned one
-    const allSlides = document.querySelectorAll('.hero-slideshow .slide');
-    const totalSlides = allSlides.length;
-    const originalSlidesCount = originalSlides.length;
-    
-    // Initialize - set first slide as active immediately without transition
-    allSlides.forEach(slide => slide.classList.add('no-transition'));
-    allSlides[0].classList.add('active');
-    
-    // Force reflow and then re-enable transitions for future slides
-    setTimeout(() => {
-        allSlides.forEach(slide => slide.classList.remove('no-transition'));
-    }, 100);
-      function showNextSlide() {
-        if (isTransitioning) return; // Prevent overlapping transitions
-        isTransitioning = true;
-        
-        // Move current slide to the left
-        allSlides[currentSlide].classList.remove('active');
-        allSlides[currentSlide].classList.add('prev');
-        
-        // Move to next slide
-        currentSlide++;
-        
-        // Check if we're at the cloned slide (last slide)
-        if (currentSlide === totalSlides - 1) {
-            // Show the clone slide (which looks like the first slide)
-            allSlides[currentSlide].classList.remove('prev');
-            allSlides[currentSlide].classList.add('active');
-            
-            // After the transition completes, instantly jump back to the real first slide
-            setTimeout(() => {
-                // Disable transitions for all slides
-                allSlides.forEach(slide => slide.classList.add('no-transition'));
-                
-                // Hide clone and show first slide instantly
-                allSlides[currentSlide].classList.remove('active');
-                currentSlide = 0;
-                allSlides[currentSlide].classList.add('active');
-                
-                // Force a reflow to ensure the instant change happens
-                allSlides[currentSlide].offsetHeight;
-                
-                // Re-enable transitions after the instant jump
-                setTimeout(() => {
-                    allSlides.forEach(slide => slide.classList.remove('no-transition'));
-                    isTransitioning = false;
-                }, 50);
-                  // Clean up all slide classes
-                allSlides.forEach((slide, index) => {
-                    if (index !== currentSlide && index !== totalSlides - 1) {
-                        slide.classList.remove('prev', 'active', 'next');
-                    }
-                });
-            }, 600); // Wait for slide transition to complete
-        } else {
-            // Normal slide transition
-            allSlides[currentSlide].classList.remove('prev');
-            allSlides[currentSlide].classList.add('active');
-              // Clean up previous slides after animation completes
-            setTimeout(() => {
-                allSlides.forEach((slide, index) => {
-                    if (index !== currentSlide) {
-                        slide.classList.remove('prev', 'active', 'next');
-                    }
-                });
-                isTransitioning = false;
-            }, 600);
+    // Preload all slide background images
+    slides.forEach(slide => {
+        const bgImg = slide.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+        if (bgImg && bgImg[1]) {
+            const img = new Image();
+            img.src = bgImg[1];
         }
-    }    function showPrevSlide() {
-        if (isTransitioning) return; // Prevent overlapping transitions
-        isTransitioning = true;
+    });
+    
+    // Initialize slideshow
+    function initSlides() {
+        slides.forEach((slide, index) => {
+            slide.classList.remove('active');
+            if (index === 0) {
+                slide.classList.add('active');
+            }
+        });
+        updateIndicators();
+    }
+    
+    // Update indicators
+    function updateIndicators() {
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlideIndex);
+        });
+    }
+    
+    // Main transition function
+    function goToSlide(targetIndex) {
+        if (isAnimating || targetIndex === currentSlideIndex) return;
         
-        // Handle looping to last slide
-        if (currentSlide === 0) {
-            // For seamless loop, jump to clone slide first
-            allSlides.forEach(slide => slide.classList.add('no-transition'));
+        isAnimating = true;
+        
+        const currentSlide = slides[currentSlideIndex];
+        const targetSlide = slides[targetIndex];
+        
+        // Start fade out current slide
+        currentSlide.classList.remove('active');
+        
+        // Small delay before fading in the new slide for smooth transition
+        setTimeout(() => {
+            targetSlide.classList.add('active');
+            currentSlideIndex = targetIndex;
+            updateIndicators();
             
-            // Hide current slide and show clone instantly
-            allSlides[currentSlide].classList.remove('active');
-            currentSlide = totalSlides - 1; // Move to clone
-            allSlides[currentSlide].classList.add('active');
-            
-            // Force reflow
-            allSlides[currentSlide].offsetHeight;
-            
-            // Re-enable transitions and animate to real last slide
+            // Reset animation flag after transition completes
             setTimeout(() => {
-                allSlides.forEach(slide => slide.classList.remove('no-transition'));
-                
-                // Move clone to right (exit)
-                allSlides[currentSlide].classList.remove('active');
-                allSlides[currentSlide].classList.add('next');
-                
-                // Show real last slide from left
-                currentSlide = originalSlidesCount - 1;
-                
-                // First, position the target slide on the left without transition
-                allSlides[currentSlide].classList.add('no-transition');
-                allSlides[currentSlide].classList.remove('prev', 'next');
-                allSlides[currentSlide].classList.add('prev'); // Position on left
-                
-                // Force reflow
-                allSlides[currentSlide].offsetHeight;
-                
-                // Re-enable transitions and slide to center
-                allSlides[currentSlide].classList.remove('no-transition');
-                allSlides[currentSlide].classList.remove('prev');
-                allSlides[currentSlide].classList.add('active');
-                
-                setTimeout(() => {
-                    // Clean up
-                    allSlides.forEach((slide, index) => {
-                        if (index !== currentSlide) {
-                            slide.classList.remove('prev', 'active', 'next');
-                        }
-                    });
-                    isTransitioning = false;
-                }, 600);
-            }, 50);
-        } else {
-            // Normal previous slide transition
-            // Move current slide to right (exit)
-            allSlides[currentSlide].classList.remove('active');
-            allSlides[currentSlide].classList.add('next');
-            
-            // Move to previous slide
-            currentSlide--;
-            
-            // Position previous slide on the left first (without transition)
-            allSlides[currentSlide].classList.add('no-transition');
-            allSlides[currentSlide].classList.remove('prev', 'next');
-            allSlides[currentSlide].classList.add('prev'); // Position on left
-            
-            // Force reflow to apply position
-            allSlides[currentSlide].offsetHeight;
-            
-            // Re-enable transitions and slide to center
-            allSlides[currentSlide].classList.remove('no-transition');
-            allSlides[currentSlide].classList.remove('prev');
-            allSlides[currentSlide].classList.add('active');
-            
-            // Clean up after animation
-            setTimeout(() => {
-                allSlides.forEach((slide, index) => {
-                    if (index !== currentSlide) {
-                        slide.classList.remove('prev', 'active', 'next');
-                    }
-                });
-                isTransitioning = false;
-            }, 600);
-        }
+                isAnimating = false;
+            }, 1200); // Match CSS transition duration
+        }, 100);
+    }
+    
+    function nextSlide() {
+        const targetIndex = (currentSlideIndex + 1) % slides.length;
+        goToSlide(targetIndex);
+    }
+    
+    function prevSlide() {
+        const targetIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+        goToSlide(targetIndex);
     }
     
     function startAutoSlide() {
-        autoSlideInterval = setInterval(showNextSlide, 4000);
+        stopAutoSlide();
+        autoSlideInterval = setInterval(nextSlide, 5000);
     }
     
     function stopAutoSlide() {
         if (autoSlideInterval) {
             clearInterval(autoSlideInterval);
+            autoSlideInterval = null;
         }
     }
     
-    function restartAutoSlide() {
-        stopAutoSlide();
-        startAutoSlide();
-    }
-    
-    // Manual navigation event listeners
+    // Event listeners for navigation arrows
     const prevButton = document.getElementById('prevSlide');
-    const nextButton = document.getElementById('nextSlide');    if (prevButton) {
+    const nextButton = document.getElementById('nextSlide');
+    const heroSection = document.querySelector('.hero');
+    
+    if (prevButton) {
         prevButton.addEventListener('click', () => {
-            showPrevSlide();
-            restartAutoSlide(); // Restart auto-slide timer
+            prevSlide();
+            startAutoSlide(); // Restart timer
         });
     }
     
     if (nextButton) {
         nextButton.addEventListener('click', () => {
-            showNextSlide();
-            restartAutoSlide(); // Restart auto-slide timer
+            nextSlide();
+            startAutoSlide(); // Restart timer
         });
     }
     
-    // Pause auto-slide on hover
-    const heroSection = document.querySelector('.hero');
+    // Event listeners for indicators
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToSlide(index);
+            startAutoSlide(); // Restart timer
+        });
+    });
+    
     if (heroSection) {
         heroSection.addEventListener('mouseenter', stopAutoSlide);
         heroSection.addEventListener('mouseleave', startAutoSlide);
+        
+        // Add touch support for mobile devices
+        let touchStartX = null;
+        let touchEndX = null;
+        
+        heroSection.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            stopAutoSlide();
+        }, { passive: true });
+        
+        heroSection.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+            startAutoSlide();
+        }, { passive: true });
+        
+        function handleSwipe() {
+            if (!touchStartX || !touchEndX) return;
+            
+            const swipeThreshold = 50;
+            const swipeDistance = touchStartX - touchEndX;
+            
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    // Swiped left - go to next slide
+                    nextSlide();
+                } else {
+                    // Swiped right - go to previous slide
+                    prevSlide();
+                }
+            }
+            
+            touchStartX = null;
+            touchEndX = null;
+        }
     }
-      // Start the auto slideshow with a delay to let the first slide be visible
-    setTimeout(() => {
-        startAutoSlide();
-    }, 2000); // 2 second delay before auto-sliding starts
+    
+    // Initialize and start
+    initSlides();
+    setTimeout(startAutoSlide, 2000); // Start auto-slide after 2 seconds
 }
 
 // Mobile Navigation Toggle
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize hero slideshow
     initializeHeroSlideshow();
+    
+    // If slideshow doesn't initialize properly, try again after a delay
+    setTimeout(() => {
+        const activeSlides = document.querySelectorAll('.hero-slideshow .slide.active');
+        if (activeSlides.length === 0) {
+            console.log('Reinitializing slideshow...');
+            initializeHeroSlideshow();
+        }
+    }, 500);
     
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
